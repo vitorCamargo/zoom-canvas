@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Zoom Canvas</title>
+        <style>
+            html, body {
+                width: 100%;
+                height: 100%;
+
+                margin: 0;
+                padding: 0;
+            }
+
+            body { 
+                height: 2000px;
+                overflow-x: hidden;
+            }
+
+            svg {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            .wrapper {
+                height: calc(120vh + 100px);
+                visibility: visible;
+            }
+
+            .container {
+                position: sticky;
+                position: -webkit-sticky;
+                top: 0;
+                left: 0;
+                overflow: hidden;
+                height: calc(100vh + 100px);
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-pack: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                visibility: visible;
+            }
+
+            .background {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-top: 0;
+                width: 925px;
+                height: 710px;
+                transform: matrix(3.37297, 0, 0, 3.37297, 0, 0);
+                transition: transform .5s ease;
+            }
+
+            .image {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                display: block;
+                background-repeat: no-repeat;
+                background: url(back.jpg)
+            }
+        </style>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(() => {
+                var height = document.getElementById('teste').getBBox().height;
+                var width = document.getElementById('teste').getBBox().width;
+
+                $('#svg').attr('height', `${$(window).height()}px`);
+                $('#svg').attr('width', `${$(window).width()}px`);
+
+                $('#svg').attr('viewBox', `0 0 ${$(window).width()} ${$(window).height()}`);
+
+                $('#teste').css({ transform: `translateY(calc(50vh - ${height}px/2)) translateX(calc(50% - ${width}px/2))` });
+            });
+
+            $(window).resize(() => {
+                var height = document.getElementById('teste').getBBox().height;
+                var width = document.getElementById('teste').getBBox().width;
+
+                $('#svg').attr('height', `${$(window).height()}px`);
+                $('#svg').attr('width', `${$(window).width()}px`);
+
+                $('#svg').attr('viewBox', `0 0 ${$(window).width()} ${$(window).height()}`);
+
+                $('#teste').css({ transform: `translateY(calc(50vh - ${height}px/2)) translateX(calc(50% - ${width}px/2))` });
+                changeZoom();
+            });
+
+            $(window).scroll(() => changeZoom());
+
+            function changeZoom() {
+                if ($(window).scrollTop() < 300) {
+                    var $x=3.37297 - ($(window).scrollTop()/4)*0.03563;
+                    var $y = $(window).scrollTop()/2 || 1;
+
+                    var x = $(window).scrollTop() > 0 ? ($(window).width() - ($(window).width()/$y))/2 : 0;
+                    var y = $(window).scrollTop() > 0 ? ($(window).height() - ($(window).height()/$y))/2 : 0;
+
+                    $('#svg').attr('height', `${$(window).height()}px`);
+                    $('#svg').attr('width', `${$(window).width()}px`);
+
+                    $('#svg').attr('viewBox', `${x} ${y} ${$(window).width()/$y} ${$(window).height()/$y}`);
+                    
+                    $('#svg rect:first').attr('x', x);
+                    $('#svg rect:first').attr('y', y);
+                    $('#Layer_1 rect:first').attr('x', x);
+                    $('#Layer_1 rect:first').attr('y', y);
+    
+                    $('.background').css({ transform: `matrix(${$x}, 0, 0, ${$x}, 0, 0)` });
+                } else {
+                    $('.background').css({ transform: `matrix(0.727442, 0, 0, 0.727442, 0, 0)` });
+                }
+            }
+        </script>
+    </head>
+
+    <body>
+        <div class="wrapper">
+            <div class="container">
+                <div class="background">
+                    <figure class="image"></figure>
+                </div>
+
+                <svg id="svg">
+                    <rect width="100%" height="100%" fill="white" mask="url(#Layer_1)" />
+                    <defs>
+                        <clipPath id="clip-Artboard_1">
+                            <rect width="108" height="80"/>
+                        </clipPath>
+                    </defs>
+
+                    <mask id="Layer_1">
+                        <rect width="100%" height="100%" fill="white" />
+                        <g id="teste">
+                            <g id="teste-wrapper">
+                                <g id="Artboard_1" data-name="Artboard – 1" clip-path="url(#clip-Artboard_1)">
+                                    <rect id="Rectangle_10" data-name="Rectangle 10" width="16" height="80"/>
+                                    <rect id="Rectangle_11" data-name="Rectangle 11" width="16" height="80" transform="translate(23)"/>
+                                    <rect id="Rectangle_12" data-name="Rectangle 12" width="16" height="80" transform="translate(46)"/>
+                                    <rect id="Rectangle_13" data-name="Rectangle 13" width="16" height="80" transform="translate(69)"/>
+                                    <rect id="Rectangle_14" data-name="Rectangle 14" width="16" height="80" transform="translate(92)"/>
+                                </g>
+                            </g>
+                        </g>
+                    </mask>
+                </svg>
+            </div>
+        </div>
+
+        Rest of the site
+    </body>
+</html>
